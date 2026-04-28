@@ -20,6 +20,18 @@ public class Persona {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
+	public static Persona crearPersona(String[] data){
+		Persona persona = new Persona();
+		persona.setDocumento(data[1]);
+		persona.setNombre(data[2]);
+		persona.setApellidos(data[3]);
+		persona.setEmail(data[4]);
+		persona.setDireccion(data[5]);
+		persona.setCp(data[6]);
+		persona.setFechaNacimiento(FechaHora.parsearFecha(data[7]));
+		return persona;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -89,9 +101,7 @@ public class Persona {
         // Direccion y código postal
 		cadena += String.format("%s,%s;", getDireccion(), getCp());
         // Fecha de nacimiento
-		cadena+=String.format("%02d/%02d/%04d\n", fecha.getFecha().getDia(), 
-        		fecha.getFecha().getMes(), 
-        		fecha.getFecha().getAnio());
+		cadena+=String.format("%s\n", fecha.getFecha().toString());
 
 		return cadena;
 	}

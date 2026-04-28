@@ -1,11 +1,14 @@
 package com.practica.ems.covid;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.practica.excecption.EmsDuplicateLocationException;
 import com.practica.excecption.EmsLocalizationNotFoundException;
+import com.practica.excecption.EmsPersonNotFoundException;
 import com.practica.genericas.FechaHora;
 import com.practica.genericas.PosicionPersona;
 
@@ -40,7 +43,7 @@ public class Localizacion {
 	    while(it.hasNext()) {
 	    	cont++;
 	    	PosicionPersona pp = it.next();
-	    	FechaHora fechaHora = this.parsearFecha(fecha, hora);
+	    	FechaHora fechaHora = FechaHora.parsearFechaHora(fecha, hora);
 	    	if(pp.getDocumento().equals(documento) && 
 	    	   pp.getFechaPosicion().equals(fechaHora)) {
 	    		return cont;
@@ -67,15 +70,27 @@ public class Localizacion {
 	    for(int i = 0; i < this.lista.size(); i++) {
 	        System.out.printf("%d;%s;", i, lista.get(i).getDocumento());
 	        FechaHora fecha = lista.get(i).getFechaPosicion();        
-	        System.out.printf("%02d/%02d/%04d;%02d:%02d;", 
-	        		fecha.getFecha().getDia(), 
-	        		fecha.getFecha().getMes(), 
-	        		fecha.getFecha().getAnio(),
-	        		fecha.getHora().getHora(),
-	        		fecha.getHora().getMinuto());
+	        System.out.printf("s;", fecha.toString());
 	        System.out.printf("%.4f;%.4f\n", lista.get(i).getCoordenada().getLatitud(), 
 	        		lista.get(i).getCoordenada().getLongitud());
 	    }
+	}
+
+	public List<PosicionPersona> localizacionPersona(String documento) throws EmsPersonNotFoundException {
+		int cont = 0;
+		List<PosicionPersona> lista = new ArrayList<PosicionPersona>();
+		Iterator<PosicionPersona> it = this.lista.iterator();
+		while (it.hasNext()) {
+			PosicionPersona pp = it.next();
+			if (pp.getDocumento().equals(documento)) {
+				cont++;
+				lista.add(pp);
+			}
+		}
+		if (cont == 0)
+			throw new EmsPersonNotFoundException();
+		else
+			return lista;
 	}
 
 	@Override
@@ -85,42 +100,13 @@ public class Localizacion {
 			PosicionPersona pp = lista.get(i);
 	        cadena += String.format("%s;", pp.getDocumento());
 	        FechaHora fecha = pp.getFechaPosicion();        
-	        cadena+=String.format("%02d/%02d/%04d;%02d:%02d;", 
-	        		fecha.getFecha().getDia(), 
-	        		fecha.getFecha().getMes(), 
-	        		fecha.getFecha().getAnio(),
-	        		fecha.getHora().getHora(),
-	        		fecha.getHora().getMinuto());
+	        cadena+=String.format("%s;",
+	        		fecha.toString());
 	        cadena+=String.format("%.4f;%.4f\n", pp.getCoordenada().getLatitud(), 
 	        		pp.getCoordenada().getLongitud());
 	    }
 		
 		return cadena;		
-	}
-	
-	@SuppressWarnings("unused")
-	private FechaHora parsearFecha (String fecha) {
-		int dia, mes, anio;
-		String[] valores = fecha.split("\\/");
-		dia = Integer.parseInt(valores[0]);
-		mes = Integer.parseInt(valores[1]);
-		anio = Integer.parseInt(valores[2]);
-		FechaHora fechaHora = new FechaHora(dia, mes, anio, 0, 0);
-		return fechaHora;
-	}
-	
-	private  FechaHora parsearFecha (String fecha, String hora) {
-		int dia, mes, anio;
-		String[] valores = fecha.split("\\/");
-		dia = Integer.parseInt(valores[0]);
-		mes = Integer.parseInt(valores[1]);
-		anio = Integer.parseInt(valores[2]);
-		int minuto, segundo;
-		valores = hora.split("\\:");
-		minuto = Integer.parseInt(valores[0]);
-		segundo = Integer.parseInt(valores[1]);
-		FechaHora fechaHora = new FechaHora(dia, mes, anio, minuto, segundo);
-		return fechaHora;
 	}
 	
 }

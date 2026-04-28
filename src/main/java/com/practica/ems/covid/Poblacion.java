@@ -31,7 +31,12 @@ public class Poblacion {
 			throw new EmsDuplicatePersonException();
 		} catch (EmsPersonNotFoundException e) {
 			lista.add(persona);
-		} 
+		}
+	}
+
+	public void addPersona (String[] datos) throws EmsDuplicatePersonException {
+		Persona persona = Persona.crearPersona(datos);
+		addPersona(persona);
 	}
 	
 	public void delPersona(String documento) throws EmsPersonNotFoundException {
@@ -75,9 +80,7 @@ public class Poblacion {
 	        // Códifo postal
 	        System.out.printf("%s,%s;", lista.get(i).getDireccion(), lista.get(i).getCp());	        
 	        // Fecha de nacimiento
-	        System.out.printf("%02d/%02d/%04d\n", fecha.getFecha().getDia(), 
-	         fecha.getFecha().getMes(), 
-	         fecha.getFecha().getAnio());	        
+	        System.out.printf("%s\n", fecha.getFecha().toString());
 	    }
 	}
 
@@ -95,9 +98,7 @@ public class Poblacion {
 	        // Direccion y código postal
 	        cadena+=String.format("%s,%s;", lista.get(i).getDireccion(), lista.get(i).getCp());	        
 	        // Fecha de nacimiento
-	        cadena+=String.format("%02d/%02d/%04d\n", fecha.getFecha().getDia(), 
-	        		fecha.getFecha().getMes(), 
-	        		fecha.getFecha().getAnio());
+	        cadena+=String.format("%s\n", fecha.getFecha().toString());
 		}
 		return cadena;
 	}
