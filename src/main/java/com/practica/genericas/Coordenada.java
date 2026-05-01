@@ -47,14 +47,14 @@ public class Coordenada {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Coordenada))
 			return false;
+
 		Coordenada other = (Coordenada) obj;
-		if (Float.floatToIntBits(latitud) != Float.floatToIntBits(other.latitud))
-			return false;
-		if (Float.floatToIntBits(longitud) != Float.floatToIntBits(other.longitud))
-			return false;
-		return true;
+
+		return Float.compare(this.latitud, other.latitud) == 0 &&
+				Float.compare(this.longitud, other.longitud) == 0;
 	}
-	
+
+
 }
