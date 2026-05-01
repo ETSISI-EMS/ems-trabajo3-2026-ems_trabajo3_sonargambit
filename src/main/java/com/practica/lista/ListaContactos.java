@@ -9,7 +9,11 @@ import java.util.List;
 
 public class ListaContactos {
 	private List<NodoTemporal> lista;
-	
+
+	public ListaContactos() {
+		this.lista = new LinkedList<>();
+	}
+
 	/**
 	 * Insertamos en la lista de nodos temporales, y a la vez inserto en la lista de nodos de coordenadas. 
 	 * En la lista de coordenadas metemos el documento de la persona que está en esa coordenada 
@@ -24,13 +28,14 @@ public class ListaContactos {
 		boolean encontrado = false;
 		while(index < lista.size() && !encontrado) {
 			NodoTemporal nodoActual = lista.get(index);
-			if (nodoActual.getFecha()==p.getFechaPosicion()){
+			if (nodoActual.getFecha().equals(p.getFechaPosicion())){
 				insertarPosicion(p.getCoordenada(),nodoActual.getListaCoordenadas());
 				encontrado = true;
-			}else {
-				insertarNuevoNodoTemporal(p);
 			}
 			index++;
+		}
+		if (!encontrado){
+			insertarNuevoNodoTemporal(p);
 		}
 		/**
 		 * No hemos encontrado ninguna posición temporal, así que
@@ -42,11 +47,11 @@ public class ListaContactos {
 	private void insertarPosicion(Coordenada coordenada,List<NodoPosicion> lista) {
 		boolean encontrado = false;
 		int index = 0;
-		while(!encontrado && lista.size()<lista.size()) {
+		while(index < lista.size() && !encontrado) {
 			if (lista.get(index).getCoordenada().equals(coordenada)) {
 				lista.get(index).setNumPersonas(lista.get(index).getNumPersonas()+1);
-			}
-			index++;
+				encontrado = true;
+			}else index++;
 		}
 		if (!encontrado) {
 			lista.add(new NodoPosicion(coordenada,1));
@@ -123,6 +128,7 @@ public class ListaContactos {
 			if(aux.getFecha().compareTo(inicio)>=0 && aux.getFecha().compareTo(fin)<=0) {
 				cont+=aux.sizeNodo();
 			}
+			index++;
 		}
 		return cont;
 	}
